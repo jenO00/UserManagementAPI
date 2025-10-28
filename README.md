@@ -1,5 +1,17 @@
 # UserManagementAPI
 Part of coursera Microsoft course. The goal is to create a User management API in .NET and C#
+A USER model is used in the user management API.
+
+## CRUD
+The following CRUD endpoints were implemented: 
+CREATE - POST localhost:XXXX/users
+READ - GET localhost:XXXX/users || GET localhost:XXXX/users/{id}
+UPDATE - PUT localhost:XXXX/users 
+DELETE - DELTE localhost:XXXX/users/{id}
+
+## Validation functionality
+Validation functionality is implemented, which is utilized for the POST and PUT functions. 
+Checks if the user is valid.
 
 ## Simulated API KEY
 During this project, a simulated API Key is used for educational purposes. I am not comfortable sharing a real API key. 
@@ -9,7 +21,9 @@ In postman, the key is used the following way:
 In real deployment, a safer method should be considered, such as: 
 OAUTH, JWT. 
 
-# CRUD functionality
+# Example Usages
+Example usages are shown below.
+
 ## CREATE (POST)
 Example of the POST usage. 
 <img width="1276" height="669" alt="image" src="https://github.com/user-attachments/assets/76d24171-42f4-4b6f-976a-59c5b7c0d762" />
