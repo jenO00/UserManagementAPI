@@ -3,12 +3,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Concurrent;
 
+// ------------------------------------------------------------
+// User Management API
+// A minimal ASP.NET Core Web API for managing users in memory.
+// Features: API key authentication, CRUD operations, pagination.
+// ------------------------------------------------------------
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-//Enkel API-nyckel-autentisering
-var apiKey = "unsafe-secret-key-for-now"; 
+// API key used for simple authentication during development.
+// In production, I would replace with a secure method like JWT or OAuth.
+// This approach is acceptable for small-scale or educational projects like this one! :)
+var apiKey = "unsafe-secret-key-for-now";
 
+//Middleware to assure correct API key is present during usage
 app.Use(async (context, next) =>
 {
     var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
@@ -28,7 +36,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
-//Global felhantering
+//Global exception handler for unexpected errors.
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
@@ -50,7 +58,7 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
-//Custom exception middleware
+//Middleware: to catch and handle exceptions in the pipeline and return JSON error messages.
 app.Use(async (context, next) =>
 {
     try
@@ -74,7 +82,7 @@ app.Use(async (context, next) =>
     }
 });
 
-//Logging
+//Middleware: Logs each request with method and statuscode. 
 app.Use(async (context, next) =>
 {
     var method = context.Request.Method;
@@ -90,7 +98,13 @@ app.Use(async (context, next) =>
 var users = new ConcurrentDictionary<int, User>();
 var nextId = 1;
 
-//GET all users
+//Endpoint: GET
+//Fetches all users
+// Supports optional pagination via query parameters:
+// skip: number of users to skip (for e.g. pagination)
+// limit: max number of users to return
+// If the parameters are missing, all users are returned.
+// example: GET http:localhost:XXXX/users
 app.MapGet("/users", (HttpRequest request) =>
 {
     var skipStr = request.Query["skip"];
@@ -106,10 +120,14 @@ app.MapGet("/users", (HttpRequest request) =>
     return Results.Ok(result);
 });
 
-//Landing page
+//Landing page, to ensure everything works as intended.
 app.MapGet("/", () => "Welcome to user management api");
 
-//GET user by ID
+//Endpoint: GET
+//Fetches a specific user.
+//param: id - the id of the user we want to fetch.
+//example: GET http:localhost:XXXX/users/1
+//returns: The specific user if successful.
 app.MapGet("/users/{id:int}", (int id) =>
 {
     try
@@ -124,7 +142,16 @@ app.MapGet("/users/{id:int}", (int id) =>
     }
 });
 
-//POST create new user
+//Endpoint: POST
+// Creates a new user if the user does not already exist, based on name and email, 
+// and checks if the user is a valid user. 
+// Example: 
+//          POST http:localhost:XXXX/users.
+// Example json raw body: 
+//          { "name":"Alice", "department": "IT", "email":"alice@gmail.com"}
+// Returns: 201 Created with the new user if successful,
+//          400 Bad Request if validation fails,
+//          409 Conflict if duplicate user exists.
 app.MapPost("/users", async (HttpRequest request) =>
 {
     try
@@ -158,7 +185,10 @@ app.MapPost("/users", async (HttpRequest request) =>
     }
 });
 
-//PUT update user
+//Endpoint: PUT
+//Updates the information of a specific user, matching the id.
+//param: id, the specific user's id.
+//example: PUT http:localhost:XXXX/users/1 and change name, email or department in the raw json body.
 app.MapPut("/users/{id:int}", async (int id, HttpRequest request) =>
 {
     try
@@ -180,7 +210,9 @@ app.MapPut("/users/{id:int}", async (int id, HttpRequest request) =>
     }
 });
 
-//DELETE user
+//Endpoint: DELETE
+// Deletes a specific user based on user ID. 
+// param: id - the specific user's ID. 
 app.MapDelete("/users/{id:int}", (int id) =>
 {
     try
@@ -197,7 +229,10 @@ app.MapDelete("/users/{id:int}", (int id) =>
 
 app.Run();
 
-//Valideringsfunktion
+///<summary>
+///Validates that user data is filled in correctly.
+///Checks that name, department and email exist and that email is valid.
+///</summary>
 bool IsValidUser(User user)
 {
     if (user is null) return false;
@@ -207,6 +242,8 @@ bool IsValidUser(User user)
 
     try
     {
+        //validate the format of an email address
+        //For example. @gmail.com would work. The string "some-email-here" would not
         var addr = new System.Net.Mail.MailAddress(user.Email);
         return addr.Address == user.Email;
     }
@@ -216,7 +253,12 @@ bool IsValidUser(User user)
     }
 }
 
-//User-model
+///<summary>
+/// User model.
+/// name - the name of the user.
+/// department - what department the user works in. 
+/// email - the user's email.
+///</summary>
 record User
 {
     public int Id { get; set; }
