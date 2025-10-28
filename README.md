@@ -4,10 +4,11 @@ A USER model is used in the user management API.
 
 ## CRUD
 The following CRUD endpoints were implemented: 
-CREATE - POST localhost:XXXX/users
-READ - GET localhost:XXXX/users || GET localhost:XXXX/users/{id}
-UPDATE - PUT localhost:XXXX/users 
-DELETE - DELTE localhost:XXXX/users/{id}
+*CREATE - POST localhost:XXXX/users
+*READ - GET localhost:XXXX/users || GET localhost:XXXX/users/{id}
+*UPDATE - PUT localhost:XXXX/users 
+*DELETE - DELTE localhost:XXXX/users/{id}
+
 
 ## Validation functionality
 Validation functionality is implemented, which is utilized for the POST and PUT functions. 
