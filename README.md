@@ -41,8 +41,8 @@ After: <img width="1198" height="275" alt="image" src="https://github.com/user-a
 
 
 ## DELETE (DELETE) 
-Example of delete usage, where Alice, id 4, is deleted.
-GET users before Alice is deleted:
+Example of delete usage, where Lisa, id 4, is deleted.
+GET users before Lisa is deleted:
 ```
 [
     {
@@ -65,7 +65,7 @@ GET users before Alice is deleted:
     }
 ]
 ```
-Deleting Alice:
+Deleting Lisa:
 <img width="1002" height="409" alt="image" src="https://github.com/user-attachments/assets/98c72450-80db-4318-b499-3430b8d485a4" />
 
 Getting the users after this will give the following list:
