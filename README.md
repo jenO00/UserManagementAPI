@@ -2,6 +2,8 @@
 Part of coursera Microsoft course. The goal is to create a User management API in .NET and C#
 A USER model is used in the user management API.
 
+I have used Copilot to debug the code, as suggested for 5 pts. 
+
 ## CRUD
 The following CRUD endpoints were implemented: 
 * CREATE - POST localhost:XXXX/users
